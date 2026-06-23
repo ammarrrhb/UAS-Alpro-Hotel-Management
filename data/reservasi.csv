@@ -1,0 +1,13 @@
+id_reservasi,id_tamu,nama_tamu,nomor_kamar,tipe_kamar,tanggal_checkin,tanggal_checkout,jumlah_malam,harga_per_malam,total_biaya,status,tanggal_reservasi,catatan
+RSV202606001,T001,Ammar Habibi,302,Suite,2026-06-21,2026-06-23,2,900000.0,1800000.0,Check-Out,2026-06-20 15:11,nan
+RSV202606002,T002,Budi Santoso,101,Standard,2026-06-22,2026-06-25,3,350000.0,1050000.0,Terisi,2026-06-22 09:30,Minta kamar bebas asap rokok
+RSV202606003,T003,Siti Aminah,201,Deluxe,2026-06-23,2026-06-24,1,550000.0,550000.0,Terpesan,2026-06-22 14:15,nan
+RSV202606004,T004,Rian Hidayat,301,Suite,2026-06-24,2026-06-26,2,900000.0,1800000.0,Terpesan,2026-06-23 10:00,Late check-in sekitar jam 7 malam
+RSV202606005,T005,Dewi Lestari,102,Standard,2026-06-23,2026-06-27,4,350000.0,1400000.0,Terisi,2026-06-23 11:45,nan
+RSV202606006,T006,Fahmi Idris,203,Deluxe,2026-06-24,2026-06-25,1,550000.0,550000.0,Terpesan,2026-06-24 08:20,Extra bed jika memungkinkan
+RSV202606007,T007,Eko Prasetyo,202,Deluxe,2026-06-22,2026-06-24,2,550000.0,1100000.0,Terisi,2026-06-22 10:15,Sudah check-in hari ini jam 2 siang
+RSV202606008,T008,Nadia Utami,301,Suite,2026-06-23,2026-06-26,3,900000.0,2700000.0,Terpesan,2026-06-22 17:00,Akan check-in besok bawa keluarga
+RSV202606010,T009,Willy Nugraha,301,Suite,2026-06-24,2026-06-28,4,900000.0,3600000.0,Check-In,2026-06-23 01:16,Additional Wedding decoration
+RSV202606009,T002,Budi Santoso,101,Standard,2026-06-22,2026-06-25,3,350000.0,1050000.0,Check-In,2026-06-22 22:29,Minta kamar bebas asap rokok
+RSV202606011,T005,Dewi Lestari,102,Standard,2026-06-23,2026-06-27,4,350000.0,1400000.0,Reservasi,2026-06-23 01:18,nan
+RSV202606012,T004,Rian Hidayat,302,Suite,2026-06-24,2026-06-26,2,900000.0,1800000.0,Check-In,2026-06-23 11:10,Late check-in sekitar jam 7 malam

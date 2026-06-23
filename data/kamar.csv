@@ -1,0 +1,9 @@
+nomor_kamar,tipe,harga_per_malam,kapasitas,fasilitas,status
+101,Standard,350000.0,2,"AC, TV, WiFi, Kamar Mandi",Terisi
+102,Standard,350000.0,2,"AC, TV, WiFi, Kamar Mandi",Terisi
+103,Standard,350000.0,2,"AC, TV, WiFi, Kamar Mandi",Tersedia
+201,Deluxe,550000.0,2,"AC, TV, WiFi, Kamar Mandi, Balkon, Mini Bar",Tersedia
+202,Deluxe,550000.0,2,"AC, TV, WiFi, Kamar Mandi, Balkon, Mini Bar",Tersedia
+203,Deluxe,550000.0,3,"AC, TV, WiFi, Kamar Mandi, Balkon, Mini Bar",Tersedia
+301,Suite,900000.0,4,"AC, TV, WiFi, Kamar Mandi Mewah, Ruang Tamu, Dapur Mini, Balkon Luas",Terisi
+302,Suite,900000.0,4,"AC, TV, WiFi, Kamar Mandi Mewah, Ruang Tamu, Dapur Mini, Balkon Luas",Terisi
