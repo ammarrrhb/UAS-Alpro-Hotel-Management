@@ -184,6 +184,17 @@ html, body, [data-testid="stAppViewContainer"] {
     font-family: 'Poppins', sans-serif !important;
     transition: all 0.2s !important;
 }
+/* ── Logout Button (red) ── */
+[data-testid="stSidebar"] .stButton > button {
+    background-color: #dc2626 !important;
+    color: white !important;
+    border: none !important;
+}
+[data-testid="stSidebar"] .stButton > button:hover {
+    background-color: #b91c1c !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(220,38,38,0.4) !important;
+}
 .stTextInput > div > div > input,
 .stSelectbox > div > div,
 .stDateInput > div > div > input,
@@ -398,18 +409,19 @@ def render_sidebar():
         </div>
         """, unsafe_allow_html=True)
 
+        st.markdown('<p style="color:#c7d2fe; font-size:0.72rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; padding: 0.5rem 0 0.25rem; margin:0;">MENU NAVIGASI</p>', unsafe_allow_html=True)
         menu = st.radio(
             "MENU NAVIGASI",
             [
-                "🏠  Dashboard",
-                "🛏️  Kelola Kamar",
-                "👤  Kelola Tamu",
-                "📋  Reservasi Baru",
-                "✅  Check-In",
-                "🔑  Check-Out",
-                "📊  Riwayat & Laporan",
+                "🏠 Dashboard",
+                "🛏️ Kelola Kamar",
+                "👤 Kelola Tamu",
+                "📋 Reservasi Baru",
+                "✅ Check-In",
+                "🔑 Check-Out",
+                "📊 Riwayat & Laporan",
             ],
-            label_visibility="visible",
+            label_visibility="collapsed",
         )
 
         st.markdown("<div style='height:1rem'></div>", unsafe_allow_html=True)
@@ -826,13 +838,10 @@ def halaman_reservasi():
     st.markdown('<div class="section-sub">Buat pemesanan kamar untuk tamu</div>', unsafe_allow_html=True)
 
     tamu_list = storage.baca_semua_tamu()
-    kamar_list = [k for k in storage.baca_semua_kamar() if k.status == "Tersedia"]
+    semua_kamar = storage.baca_semua_kamar()
 
     if not tamu_list:
         st.warning("⚠️ Belum ada tamu terdaftar. Silakan daftarkan tamu terlebih dahulu di menu **Kelola Tamu**.")
-        return
-    if not kamar_list:
-        st.warning("⚠️ Tidak ada kamar yang tersedia saat ini.")
         return
 
     col_form, col_preview = st.columns([3, 2])
@@ -844,28 +853,46 @@ def halaman_reservasi():
             tamu_options = {f"{t.id_tamu} — {t.nama}": t for t in tamu_list}
             tamu_pilih = st.selectbox("👤 Tamu*", list(tamu_options.keys()))
 
-            # Room filter by type
+            # Room filter by type (dependent dropdown)
             tipe_filter = st.selectbox("🏷️ Filter Tipe Kamar", ["Semua", "Standard", "Deluxe", "Suite"])
-            filtered_kamar = kamar_list if tipe_filter == "Semua" else [k for k in kamar_list if k.tipe == tipe_filter]
 
-            if not filtered_kamar:
-                st.error(f"Tidak ada kamar {tipe_filter} yang tersedia.")
-                st.form_submit_button("Buat Reservasi", disabled=True)
+            # Filter rooms by selected type (but keep full data for checking availability)
+            if tipe_filter == "Semua":
+                filtered_by_type = semua_kamar
             else:
-                kamar_options = {f"Kamar {k.nomor_kamar} — {k.tipe} ({fmt_rupiah(k.harga_per_malam)}/malam)": k for k in filtered_kamar}
+                filtered_by_type = [k for k in semua_kamar if k.tipe == tipe_filter]
+
+            # From that subset, only keep rooms that are EXACTLY 'Tersedia'
+            available_kamar = [k for k in filtered_by_type if k.status == "Tersedia"]
+
+            # If no available room for the selected type, show clear warning and disable submit
+            submit_disabled = False
+            if tipe_filter != "Semua" and not available_kamar:
+                st.warning("⚠️ No rooms available for this type! Please choose another room type.")
+                submit_disabled = True
+
+            # Only show the room selectbox when there are available rooms
+            kamar_pilih = None
+            kamar_options = {}
+            if available_kamar:
+                kamar_options = {f"Kamar {k.nomor_kamar} — {k.tipe} ({fmt_rupiah(k.harga_per_malam)}/malam)": k for k in available_kamar}
                 kamar_pilih = st.selectbox("🛏️ Kamar*", list(kamar_options.keys()))
 
-                col1, col2 = st.columns(2)
-                with col1:
-                    checkin = st.date_input("📅 Check-In*", value=date.today() + timedelta(days=1), min_value=date.today())
-                with col2:
-                    checkout = st.date_input("📅 Check-Out*", value=date.today() + timedelta(days=2), min_value=date.today() + timedelta(days=1))
+            col1, col2 = st.columns(2)
+            with col1:
+                checkin = st.date_input("📅 Check-In*", value=date.today() + timedelta(days=1), min_value=date.today())
+            with col2:
+                checkout = st.date_input("📅 Check-Out*", value=date.today() + timedelta(days=2), min_value=date.today() + timedelta(days=1))
 
-                catatan = st.text_area("📝 Catatan Khusus", placeholder="Permintaan kamar, kebutuhan khusus, dsb.")
+            catatan = st.text_area("📝 Catatan Khusus", placeholder="Permintaan kamar, kebutuhan khusus, dsb.")
 
-                submitted = st.form_submit_button("📋 Buat Reservasi", type="primary", use_container_width=True)
+            submitted = st.form_submit_button("📋 Buat Reservasi", type="primary", use_container_width=True, disabled=submit_disabled)
 
-                if submitted:
+            # Prevent submission if no valid room selected
+            if submitted:
+                if not kamar_pilih or kamar_pilih not in kamar_options:
+                    st.error("⚠️ Tidak ada kamar yang dipilih atau kamar tidak tersedia. Pilih tipe kamar lain atau refresh daftar.")
+                else:
                     tamu_sel = tamu_options[tamu_pilih]
                     kamar_sel = kamar_options[kamar_pilih]
                     success, msg, res = services.buat_reservasi(
